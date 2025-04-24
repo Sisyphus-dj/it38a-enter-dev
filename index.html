@@ -3,27 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Form</title>
+    <title>Login and Sign Up Form</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-    <div class="login-container">
-        <h2>Login</h2>
-        <form id="loginForm">
-            <div class="form-group">
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required>
-            </div>
+    <div class="form-container">
+        <div class="login-container" id="login-form">
+            <h2>Login</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
 
-            <div class="form-group">
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
-            </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
 
-            <button type="submit">Login</button>
-        </form>
-        <div id="error-message" class="error-message"></div>
+                <button type="submit">Login</button>
+            </form>
+            <div id="error-message" class="error-message"></div>
+            <p>Don't have an account? <a href="javascript:void(0)" id="show-signup">Sign up</a></p>
+        </div>
+
+        <!-- Sign Up Form -->
+        <div class="signup-container" id="signup-form" style="display: none;">
+            <h2>Sign Up</h2>
+            <form id="signupForm">
+                <div class="form-group">
+                    <label for="new-username">Username:</label>
+                    <input type="text" id="new-username" name="username" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="new-email">Email:</label>
+                    <input type="email" id="new-email" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="new-password">Password:</label>
+                    <input type="password" id="new-password" name="password" required>
+                </div>
+
+                <button type="submit">Sign Up</button>
+            </form>
+            <div id="signup-error-message" class="error-message"></div>
+            <p>Already have an account? <a href="javascript:void(0)" id="show-login">Login</a></p>
+        </div>
     </div>
 
     <script src="app.js"></script>
