@@ -13,12 +13,12 @@ body {
     height: 100vh;
 }
 
-.login-container {
+.form-container {
+    width: 300px;
     background-color: #fff;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 300px;
     text-align: center;
 }
 
@@ -62,4 +62,17 @@ button:hover {
     color: red;
     margin-top: 10px;
     font-size: 14px;
+}
+
+p {
+    margin-top: 10px;
+}
+
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
 }
