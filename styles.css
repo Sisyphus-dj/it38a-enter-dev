@@ -1,28 +1,50 @@
+/* General Reset */
 * {
     box-sizing: border-box;
-  }
-  body {
+}
+
+body {
     margin: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: #e9f5ea;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
     color: #2f4f2f;
-  }
-  .container {
+}
+
+/* Header for AgriSync */
+.header {
+    background-color: #4caf50; /* Green background */
+    color: white;
+    text-align: center;
+    padding: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%; /* Ensure the header spans the full width */
+    position: fixed; /* Fix the header at the top */
+    top: 0;
+    left: 0;
+    z-index: 1000; /* Ensure the header stays above other elements */
+}
+
+/* Spacer to push content below the fixed header */
+.header-spacer {
+    height: 80px; /* Same height as the header's padding */
+}
+
+/* Container for Registration Form */
+.container {
     background: white;
     border-radius: 12px;
     box-shadow: 0 8px 16px rgba(0, 128, 0, 0.15);
     padding: 24px 32px;
-    width: 340px;
-    max-width: 90vw;
-    min-height: 380px;
+    width: 80%; /* Expand horizontally */
+    max-width: 600px; /* Set a maximum width */
+    margin: 20px auto; /* Center the container horizontally */
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     justify-content: center;
-  }
+}
   h2 {
     text-align: center;
     margin-bottom: 20px;
@@ -114,10 +136,10 @@
     margin-bottom: 24px;
     text-align: center;
   }
-  @media (max-width: 400px) {
+ @media (max-width: 400px) {
     .container {
-      width: 90vw;
-      padding: 20px 24px;
-      min-height: auto;
+        width: 90%; /* Use 90% of the screen width */
+        padding: 20px; /* Adjust padding for smaller screens */
     }
-  }
+}
+

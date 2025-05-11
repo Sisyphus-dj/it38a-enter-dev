@@ -58,58 +58,130 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
-    <link rel="stylesheet" href="styles.css"> 
+  <meta charset="UTF-8">
+  <title>Register | AgriSync</title>
+  <style>
+    body {
+      margin: 0;
+      background: #eaf7ea;
+      font-family: Arial, sans-serif;
+      padding-top: 70px; /* Space for fixed header */
+    }
+    /* Fixed header */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: #4e944f;
+      color: #fff;
+      text-align: center;
+      padding: 20px 0 10px 0;
+      font-size: 2rem;
+      font-weight: bold;
+      letter-spacing: 2px;
+      z-index: 1000;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.07);
+    }
+    /* Center and widen the form */
+    .register-container {
+      max-width: 600px;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+      padding: 40px 40px 30px 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .register-title {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #4e944f;
+      text-align: center;
+      margin-bottom: 25px;
+      letter-spacing: 1px;
+    }
+    .register-form label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 500;
+      color: #333;
+    }
+    .register-form input[type="text"],
+    .register-form input[type="email"],
+    .register-form input[type="password"],
+    .register-form input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 18px;
+      border: 1px solid #a6d8a8;
+      border-radius: 5px;
+      font-size: 1rem;
+      box-sizing: border-box;
+      background: #f7fff7;
+    }
+    .register-form input[type="submit"] {
+      background: #4e944f;
+      color: #fff;
+      border: none;
+      padding: 12px;
+      border-radius: 5px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .register-form input[type="submit"]:hover {
+      background: #357a38;
+    }
+    @media (max-width: 700px) {
+      .register-container {
+        max-width: 95vw;
+        padding: 20px 5vw;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Register</h2>
-        <?php if (!empty($error)): ?>
-            <div class="error-message"><?php echo htmlspecialchars($error); ?></div>
-        <?php endif; ?>
-        <?php if (!empty($success)): ?>
-            <div class="success-message"><?php echo htmlspecialchars($success); ?></div>
-        <?php endif; ?>
-        <form action="register.php" method="POST">
-            <div>
-                <label for="first_name">First Name:</label>
-                <input type="text" id="first_name" name="first_name" required>
-            </div>
-            <div>
-                <label for="last_name">Last Name:</label>
-                <input type="text" id="last_name" name="last_name" required>
-            </div>
-            <div>
-                <label for="age">Age:</label>
-                <input type="number" id="age" name="age">
-            </div>
-            <div>
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
-            </div>
-            <div>
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <div>
-                <label for="confirm_password">Confirm Password:</label>
-                <input type="password" id="confirm_password" name="confirm_password" required>
-            </div>
-            <div>
-                <label for="address">Address:</label>
-                <textarea id="address" name="address"></textarea>
-            </div>
-            <div>
-                <label for="contact_number">Contact Number:</label>
-                <input type="text" id="contact_number" name="contact_number">
-            </div>
-            <button type="submit" class="btn">Register</button>
-        </form>
-        <p class="toggle-link">
+  <div class="header">
+    AgriSync
+  </div>
+
+  <div class="register-container">
+    <div class="register-title">REGISTER</div>
+    <form class="register-form" method="post" action="register.php">
+      <label for="first_name">First Name:</label>
+      <input type="text" name="first_name" id="first_name" required>
+
+      <label for="last_name">Last Name:</label>
+      <input type="text" name="last_name" id="last_name" required>
+
+      <label for="age">Age:</label>
+      <input type="number" name="age" id="age" min="1" required>
+
+      <label for="email">Email:</label>
+      <input type="email" name="email" id="email" required>
+
+      <label for="contact_number">Contact Number:</label>
+      <input type="text" name="contact_number" id="contact_number" required>
+
+      <label for="address">Address:</label>
+      <input type="text" name="address" id="address" required>
+
+      <label for="password">Password:</label>
+      <input type="password" name="password" id="password" required>
+
+      <label for="confirm_password">Confirm Password:</label>
+      <input type="password" name="confirm_password" id="confirm_password" required>
+
+      <input type="submit" value="Register">
+    </form>
+    <p class="toggle-link">
             Already have an account? <a href="login.php">Login here</a>
         </p>
-    </div>
+  </div>
 </body>
 </html>
+

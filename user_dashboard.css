@@ -1,0 +1,252 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+header {
+    text-align: center;
+    padding: 20px;
+    background: #3c763d; /* Green background */
+    color: white;
+}
+
+.fact-box {
+    background: #5bc0de;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+
+.content-sections {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.topic {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 30%;
+    margin: 10px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.topic img {
+    width: 100%;
+    border-radius: 5px;
+}
+
+.signup {
+    text-align: center;
+    margin: 30px 0;
+}
+
+footer {
+    text-align: center;
+    background: #3c763d;
+    color: white;
+    padding: 20px;
+}
+.signup {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 30px 0;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin: 30px auto; /* Center horizontally */
+}
+
+.signup label {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-align: left;
+    width: 100%;
+}
+
+.signup input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.signup button {
+    padding: 10px 20px;
+    background: #3c763d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.signup button:hover {
+    background: #2e5a2e;
+}
+/* Navigation Bar */
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: #ffffff;
+    border-bottom: 1px solid #ddd;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Align app name and menu on opposite sides */
+    padding: 0 20px;
+    z-index: 1000;
+    box-sizing: border-box;
+}
+
+/* App Name */
+.app-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    text-decoration: none;
+}
+
+/* Navigation Menu */
+.nav-menu {
+    display: flex; /* Align items horizontally */
+    gap: 15px; /* Reduce spacing between menu items */
+    list-style: none; /* Remove bullet points */
+    margin: 0;
+    padding: 0;
+    align-items: center; /* Align items vertically in the center */
+    font-size: 14px; /* Make the menu slightly smaller */
+}
+
+.nav-menu > li {
+    position: relative; /* Required for dropdown positioning */
+}
+
+.nav-menu a, .nav-menu button {
+    text-decoration: none;
+    color: #333;
+    font-weight: 600;
+    font-size: 14px; /* Slightly smaller font size */
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px 12px; /* Adjust padding for smaller clickable area */
+    transition: color 0.3s ease;
+}
+.nav-spacer {
+    height: 60px; /* Same height as the .navbar */
+}
+.nav-menu a:hover,
+.nav-menu button:hover {
+    color: #007BFF; /* Change color on hover */
+}
+
+/* Dropdown Menu */
+.dropdown-content {
+    display: none; /* Hide dropdown by default */
+    position: absolute;
+    top: 100%; /* Position dropdown below the parent */
+    left: 0;
+    background-color: #fff;
+    min-width: 160px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    z-index: 1001;
+}
+
+.dropdown-content a {
+    display: block;
+    padding: 10px 15px;
+    color: #333;
+    font-weight: normal;
+    text-decoration: none;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+    color: #007BFF;
+}
+
+/* Show dropdown on hover */
+.nav-menu li:hover > .dropdown-content {
+    display: block;
+}
+
+/* Contact Us Button */
+.contact-btn {
+    font-weight: 700;
+    background-color: #007BFF;
+    color: white;
+    border-radius: 20px;
+    padding: 6px 16px; /* Smaller padding for a smaller button */
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 14px; /* Smaller font size */
+}
+
+.contact-btn:hover {
+    background-color: #0056b3;
+}
+.fact-box {
+    max-width: 90%; /* Extend the container to take up 90% of the screen width */
+    background-color: #3d883d; /* Light greenish background */
+    border: 2px solid #4caf50; /* Green border */
+    border-radius: 10px; /* Rounded corners */
+    padding: 20px 25px; /* Add padding inside the box */
+    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.2); /* Subtle shadow */
+    text-align: center; /* Center-align the text */
+    font-family: Arial, sans-serif;
+    margin: 20px auto; /* Center the box horizontally */
+}
+
+ /* Shop Now Box */
+.shop-now-box {
+    display: flex;
+    justify-content: center; /* Center the box horizontally */
+    align-items: center; /* Center the content vertically */
+    border: 3px solid #4caf50; /* Green border for the box */
+    border-radius: 10px; /* Rounded corners for the box */
+    padding: 20px; /* Add padding inside the box */
+    background-color: #f0fff0; /* Light greenish background for the box */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for the box */
+    margin: 20px auto; /* Center the box and add vertical spacing */
+    max-width: 350px; /* Limit the width of the box */
+    text-align: center; /* Center-align the text inside the box */
+}
+
+/* Shop Now Button */
+.shop-now-btn {
+    display: inline-block;
+    background-color: #4caf50; /* Green background */
+    color: white; /* White text for contrast */
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    border: 2px solid #3c763d; /* Add a green border to the button */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for the button */
+}
+
+/* Hover Effect for Shop Now Button */
+.shop-now-btn:hover {
+    background-color: #388e3c; /* Darker green on hover */
+    border-color: #2e5a2e; /* Darker border on hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+}
