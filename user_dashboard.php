@@ -50,7 +50,7 @@ if (isset($_SESSION['feed_message'])) {
             </li>
 
             <li><a href="#">About Us</a></li>
-            <li><a href="#" class="shop-btn">Shop</a></li>
+            <li><a href="shop_page.php" class="shop-btn">Shop</a></li>
             <li><button class="contact-btn">Contact Us</button></li>
         </ul>
     </nav>
@@ -68,7 +68,7 @@ if (isset($_SESSION['feed_message'])) {
     </header>
      </div>
          <div style="text-align: center; margin-top: 20px;">
-    <a href="#" class="shop-now-btn">Shop Now</a>
+    <a href="shop_page.php" class="shop-now-btn">Shop Now</a>
 </div>
 
     <div class="nav-spacer"></div>
