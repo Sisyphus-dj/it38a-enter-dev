@@ -310,24 +310,24 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                             <img src="<?php echo htmlspecialchars(!empty($item['image_path']) ? $item['image_path'] : 'placeholder-image.png'); ?>" alt="<?php echo htmlspecialchars($item['product_name']); ?>">
                             <div class="order-summary-details">
                                 <h5><?php echo htmlspecialchars($item['product_name']); ?></h5>
-                                <span class="order-summary-price">Price: $<?php echo htmlspecialchars(number_format($item['product_price'], 2)); ?></span>
+                                <span class="order-summary-price">Price: ₱<?php echo htmlspecialchars(number_format($item['product_price'], 2)); ?></span>
                                 <span class="order-summary-quantity"> | Qty: <?php echo htmlspecialchars($item['quantity']); ?></span>
                             </div>
                             <div class="order-summary-subtotal">
-                                $<?php echo htmlspecialchars(number_format($item['product_price'] * $item['quantity'], 2)); ?>
+                                ₱<?php echo htmlspecialchars(number_format($item['product_price'] * $item['quantity'], 2)); ?>
                             </div>
                         </div>
                     <?php endforeach; ?>
                     <div class="checkout-total">
                         <table style="float:right; text-align:right;">
-                            <tr><td>Cart Total:</td><td>$<?php echo htmlspecialchars(number_format($cart_total, 2)); ?></td></tr>
-                            <tr><td>Delivery Fee:</td><td>$<?php echo htmlspecialchars(number_format((float)($settings['delivery_fee'] ?? 0), 2)); ?></td></tr>
-                            <tr><td><strong>Total:</strong></td><td><strong>$<?php echo htmlspecialchars(number_format($cart_total + (float)($settings['delivery_fee'] ?? 0), 2)); ?></strong></td></tr>
+                            <tr><td>Cart Total:</td><td>₱<?php echo htmlspecialchars(number_format($cart_total, 2)); ?></td></tr>
+                            <tr><td>Delivery Fee:</td><td>₱<?php echo htmlspecialchars(number_format((float)($settings['delivery_fee'] ?? 0), 2)); ?></td></tr>
+                            <tr><td><strong>Total:</strong></td><td><strong>₱<?php echo htmlspecialchars(number_format($cart_total + (float)($settings['delivery_fee'] ?? 0), 2)); ?></strong></td></tr>
                         </table>
                         <div style="clear:both;"></div>
                         <?php $min_order = (float)($settings['min_order_amount'] ?? 0); ?>
                         <?php if ($cart_total < $min_order): ?>
-                            <div class="feed-alert feed-alert-error">Minimum order amount is $<?php echo number_format($min_order, 2); ?>. Please add more items to your cart.</div>
+                            <div class="feed-alert feed-alert-error">Minimum order amount is ₱<?php echo number_format($min_order, 2); ?>. Please add more items to your cart.</div>
                             <button class="btn-place-order" disabled>Place Order</button>
                         <?php else: ?>
                             <button type="submit" class="btn-place-order">Place Order</button>
@@ -337,7 +337,6 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 
                 <div class="checkout-section">
                     <h2>Payment Method</h2>
-                    <?php if (($settings['payment_gateway'] ?? '') == 'cod' || ($settings['payment_gateway'] ?? '') == 'both'): ?>
                     <div class="payment-method-option <?php echo $selected_payment_method === 'cod' ? 'selected' : ''; ?>">
                         <label>
                             <input type="radio" name="payment_method" value="cod" <?php echo $selected_payment_method === 'cod' ? 'checked' : ''; ?>>
@@ -345,18 +344,28 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                         </label>
                         <div class="payment-method-description">Pay with cash upon delivery of your order.</div>
                     </div>
-                    <?php endif; ?>
-                    <?php if (($settings['payment_gateway'] ?? '') == 'gcash' || ($settings['payment_gateway'] ?? '') == 'both'): ?>
-                    <div class="payment-method-option <?php echo $selected_payment_method === 'gcash' ? 'selected' : ''; ?>">
+                    <div class="payment-method-option <?php echo $selected_payment_method === 'credit_card' ? 'selected' : ''; ?>">
                         <label>
-                            <input type="radio" name="payment_method" value="gcash" <?php echo $selected_payment_method === 'gcash' ? 'checked' : ''; ?>>
-                            GCash
+                            <input type="radio" name="payment_method" value="credit_card" <?php echo $selected_payment_method === 'credit_card' ? 'checked' : ''; ?>>
+                            Credit Card
                         </label>
-                        <div class="payment-method-description">Send payment to GCash Number: <strong><?php echo htmlspecialchars($settings['gcash_number'] ?? ''); ?></strong></div>
+                        <div class="payment-method-description">Pay securely using your credit card. (Credit card processing coming soon.)</div>
                     </div>
-                    <?php endif; ?>
-                     <div id="gcash_instructions" style="display: <?php echo ($selected_payment_method == 'gcash') ? 'block' : 'none'; ?>; margin-top:10px; padding:10px; background-color:#e9ecef; border-radius:4px;">
-                        <p><strong>GCash Payment Instructions:</strong> Further instructions for GCash payment will appear here or you will be redirected after placing the order.</p>
+                    <div id="credit-card-fields" style="display: <?php echo ($selected_payment_method == 'credit_card') ? 'block' : 'none'; ?>; margin-top:15px;">
+                        <div class="form-group">
+                            <label for="cc_number">Card Number</label>
+                            <input type="text" id="cc_number" name="cc_number" pattern="\d{13,19}" maxlength="19" autocomplete="cc-number" <?php echo ($selected_payment_method == 'credit_card') ? 'required' : ''; ?>>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="cc_expiry">Expiry Date (MM/YY)</label>
+                                <input type="text" id="cc_expiry" name="cc_expiry" pattern="\d{2}/\d{2}" maxlength="5" autocomplete="cc-exp" placeholder="MM/YY" <?php echo ($selected_payment_method == 'credit_card') ? 'required' : ''; ?>>
+                            </div>
+                            <div class="form-group">
+                                <label for="cc_cvv">Card Verification Value/Code(CVV)</label>
+                                <input type="text" id="cc_cvv" name="cc_cvv" pattern="\d{3,4}" maxlength="4" autocomplete="cc-csc" <?php echo ($selected_payment_method == 'credit_card') ? 'required' : ''; ?>>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -398,6 +407,23 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                  selectPaymentMethod(initialMethod);
             }
         };
+
+        function toggleCreditCardFields() {
+            var ccFields = document.getElementById('credit-card-fields');
+            var ccInputs = ccFields.querySelectorAll('input');
+            var selected = document.querySelector('input[name="payment_method"]:checked').value;
+            if (selected === 'credit_card') {
+                ccFields.style.display = 'block';
+                ccInputs.forEach(function(input) { input.required = true; });
+            } else {
+                ccFields.style.display = 'none';
+                ccInputs.forEach(function(input) { input.required = false; });
+            }
+        }
+        document.querySelectorAll('input[name="payment_method"]').forEach(function(radio) {
+            radio.addEventListener('change', toggleCreditCardFields);
+        });
+        window.onload = toggleCreditCardFields;
     </script>
 </body>
 </html> 

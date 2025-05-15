@@ -208,7 +208,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 <p><strong>Order ID:</strong> #<?php echo htmlspecialchars($order_details['id']); ?></p>
                 <p><strong>Order Date:</strong> <?php echo htmlspecialchars(date("F j, Y, g:i a", strtotime($order_details['order_date']))); ?></p>
                 <p><strong>Order Status:</strong> <?php echo htmlspecialchars(ucfirst($order_details['order_status'])); ?></p>
-                <p><strong>Total Amount:</strong> $<?php echo htmlspecialchars(number_format($order_details['total_amount'], 2)); ?></p>
+                <p><strong>Total Amount:</strong> ₱<?php echo htmlspecialchars(number_format($order_details['total_amount'], 2)); ?></p>
                 <p><strong>Payment Method:</strong> <?php echo htmlspecialchars($order_details['payment_method'] ?? 'N/A'); ?></p>
                 <?php if (($order_details['payment_method'] ?? '') == 'gcash'): ?>
                 <p><strong>GCash Number:</strong> <?php echo htmlspecialchars($settings['gcash_number'] ?? ''); ?></p>
@@ -233,11 +233,11 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                         <img src="<?php echo htmlspecialchars(!empty($item['image_path']) ? $item['image_path'] : 'placeholder-image.png'); ?>" alt="<?php echo htmlspecialchars($item['product_name']); ?>">
                         <div class="ordered-item-details">
                             <h5><?php echo htmlspecialchars($item['product_name']); ?></h5>
-                            <span class="ordered-item-price">Price: $<?php echo htmlspecialchars(number_format($item['price_at_purchase'], 2)); ?></span>
+                            <span class="ordered-item-price">Price: ₱<?php echo htmlspecialchars(number_format($item['price_at_purchase'], 2)); ?></span>
                             <span class="ordered-item-quantity"> | Qty: <?php echo htmlspecialchars($item['quantity']); ?></span>
                         </div>
                         <div class="ordered-item-subtotal">
-                            $<?php echo htmlspecialchars(number_format($item['subtotal'], 2)); ?>
+                            ₱<?php echo htmlspecialchars(number_format($item['subtotal'], 2)); ?>
                         </div>
                     </div>
                 <?php endforeach; ?>

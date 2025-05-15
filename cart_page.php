@@ -215,7 +215,7 @@ $user = $_SESSION['user']; // For navigation menu
                     <img src="<?php echo htmlspecialchars(!empty($item['image_path']) ? $item['image_path'] : 'placeholder-image.png'); ?>" alt="<?php echo htmlspecialchars($item['product_name']); ?>">
                     <div class="cart-item-details">
                         <h4><?php echo htmlspecialchars($item['product_name']); ?></h4>
-                        <p class="price">Price: $<?php echo htmlspecialchars(number_format($item['product_price'], 2)); ?></p>
+                        <p class="price">Price: ₱<?php echo htmlspecialchars(number_format($item['product_price'], 2)); ?></p>
                          <p class="price">Stock: <?php echo htmlspecialchars($item['stock_quantity']); ?></p>
                     </div>
                     <div class="cart-item-actions">
@@ -230,21 +230,21 @@ $user = $_SESSION['user']; // For navigation menu
                         </form>
                     </div>
                     <div style="min-width: 80px; text-align:right; margin-left:15px;">
-                        <strong>$<?php echo htmlspecialchars(number_format($item['product_price'] * $item['quantity'], 2)); ?></strong>
+                        <strong>₱<?php echo htmlspecialchars(number_format($item['product_price'] * $item['quantity'], 2)); ?></strong>
                     </div>
                 </div>
             <?php endforeach; ?>
 
             <div class="cart-summary">
                 <table style="float:right; text-align:right;">
-                    <tr><td>Cart Total:</td><td>$<?php echo htmlspecialchars(number_format($cart_total, 2)); ?></td></tr>
-                    <tr><td>Delivery Fee:</td><td>$<?php echo htmlspecialchars(number_format((float)($settings['delivery_fee'] ?? 0), 2)); ?></td></tr>
-                    <tr><td><strong>Total:</strong></td><td><strong>$<?php echo htmlspecialchars(number_format($cart_total + (float)($settings['delivery_fee'] ?? 0), 2)); ?></strong></td></tr>
+                    <tr><td>Cart Total:</td><td>₱<?php echo htmlspecialchars(number_format($cart_total, 2)); ?></td></tr>
+                    <tr><td>Delivery Fee:</td><td>₱<?php echo htmlspecialchars(number_format((float)($settings['delivery_fee'] ?? 0), 2)); ?></td></tr>
+                    <tr><td><strong>Total:</strong></td><td><strong>₱<?php echo htmlspecialchars(number_format($cart_total + (float)($settings['delivery_fee'] ?? 0), 2)); ?></strong></td></tr>
                 </table>
                 <div style="clear:both;"></div>
                 <?php $min_order = (float)($settings['min_order_amount'] ?? 0); ?>
                 <?php if ($cart_total < $min_order): ?>
-                    <div class="feed-alert feed-alert-error">Minimum order amount is $<?php echo number_format($min_order, 2); ?>. Please add more items to your cart.</div>
+                    <div class="feed-alert feed-alert-error">Minimum order amount is ₱<?php echo number_format($min_order, 2); ?>. Please add more items to your cart.</div>
                     <button class="btn-checkout" disabled>Proceed to Checkout</button>
                 <?php else: ?>
                     <a href="checkout_page.php" class="btn-checkout">Proceed to Checkout</a>

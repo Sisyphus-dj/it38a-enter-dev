@@ -319,7 +319,7 @@ $user = $_SESSION['user'] ?? null;
                             <img src="placeholder-image.png" alt="No image available">
                         <?php endif; ?>
                         <h4><?php echo htmlspecialchars($product['name']); ?></h4>
-                        <p class="price">$<?php echo htmlspecialchars(number_format($product['price'], 2)); ?></p>
+                        <div class="product-price">₱<?php echo htmlspecialchars(number_format($product['price'], 2)); ?></div>
                         <?php if (!empty($product['category_name'])): ?>
                             <p class="category">Category: <?php echo htmlspecialchars($product['category_name']); ?></p>
                         <?php endif; ?>
