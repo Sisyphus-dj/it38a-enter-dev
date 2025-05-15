@@ -250,3 +250,275 @@ footer {
     border-color: #2e5a2e; /* Darker border on hover */
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
 }
+
+/* Feed Section Styles */
+.feed-section {
+    background-color: #f9f9f9;
+    padding: 20px;
+    margin-bottom: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    max-width: 900px; /* Added max-width */
+    margin-left: auto; /* Added for centering */
+    margin-right: auto; /* Added for centering */
+}
+
+.feed-section h2, .feed-section h3 {
+    color: #333;
+    margin-top: 0;
+}
+
+/* Create Post Form */
+.create-post-form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #eee;
+}
+
+.create-post-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #555;
+}
+
+.create-post-form select,
+.create-post-form textarea,
+.create-post-form input[type="text"],
+.create-post-form input[type="url"],
+.create-post-form input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box; /* Important to include padding and border in the element's total width and height */
+}
+
+.create-post-form textarea {
+    resize: vertical; /* Allow vertical resizing */
+    min-height: 80px;
+}
+
+.create-post-form .btn { /* Assuming you have a .btn class, or adjust as needed */
+    background-color: #5cb85c;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.create-post-form .btn:hover {
+    background-color: #4cae4c;
+}
+
+/* Feed Posts Display */
+.feed-posts h3 {
+    margin-bottom: 15px;
+}
+
+.feed-post {
+    background-color: #fff;
+    border: 1px solid #e7e7e7;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    position: relative; /* For potential absolute positioning of actions if needed */
+}
+
+.feed-post h4 {
+    margin-top: 0;
+    margin-bottom: 5px;
+    color: #0056b3;
+}
+
+.feed-post small {
+    display: block;
+    color: #777;
+    margin-bottom: 10px;
+    font-size: 0.85em;
+}
+
+.feed-post p {
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+.feed-post img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+.feed-post a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.feed-post a:hover {
+    text-decoration: underline;
+}
+
+/* Feed Alert Message Styles */
+.feed-alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.feed-alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.feed-alert-error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+.feed-alert-info {
+    color: #0c5460;
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+}
+
+/* Post Structure & Elements */
+.post-header {
+    margin-bottom: 10px;
+}
+
+.post-caption {
+    margin-bottom: 10px;
+    white-space: pre-wrap; /* Respects newlines and wraps text */
+    word-wrap: break-word; /* Breaks long words to prevent overflow */
+}
+
+.post-media img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin-top: 5px; /* Adjusted from .feed-post img */
+}
+
+/* Link Preview Styles */
+.post-link-preview {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-top: 10px;
+    display: flex;
+    background-color: #f8f9fa; /* Light background for the preview box */
+    overflow: hidden; /* Ensures child elements conform to border-radius */
+}
+
+.link-preview-image {
+    max-width: 150px; /* Limit image width */
+    min-width: 100px; /* Ensure a minimum width if image is small */
+    height: auto;
+    object-fit: cover; /* Cover the area, cropping if necessary */
+    margin-right: 10px;
+    border-right: 1px solid #ddd;
+}
+
+.link-preview-content {
+    padding: 10px;
+    flex-grow: 1; /* Allows content to take remaining space */
+    display: flex;
+    flex-direction: column;
+}
+
+.link-preview-content h5 {
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-size: 1.1em;
+}
+
+.link-preview-content h5 a {
+    color: #0056b3;
+    text-decoration: none;
+}
+.link-preview-content h5 a:hover {
+    text-decoration: underline;
+}
+
+.link-preview-content p {
+    font-size: 0.9em;
+    color: #555;
+    margin-bottom: 10px;
+    flex-grow: 1; /* Allows description to take available space */
+}
+
+.visit-link-btn {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 3px;
+    font-size: 0.85em;
+    text-align: center;
+    margin-top: auto; /* Pushes button to the bottom of the flex container */
+    align-self: flex-start; /* Aligns button to the left */
+}
+
+.visit-link-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Post Actions (Edit/Delete Buttons) */
+.post-actions {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+    text-align: right;
+}
+
+.post-actions .btn-edit,
+.post-actions .btn-delete {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-left: 8px;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.9em;
+    transition: background-color 0.2s ease;
+}
+
+.post-actions .btn-edit {
+    background-color: #ffc107; /* Yellow for edit */
+    color: #333;
+    border: 1px solid #e0a800;
+}
+.post-actions .btn-edit:hover {
+    background-color: #e0a800;
+}
+
+.post-actions .btn-delete {
+    background-color: #dc3545; /* Red for delete */
+    color: white;
+    border: 1px solid #c82333;
+}
+.post-actions .btn-delete:hover {
+    background-color: #c82333;
+}
+
+/* Readonly form control style for edit page */
+.form-control-readonly {
+    background-color: #e9ecef; /* Bootstrap-like readonly background */
+    opacity: 1;
+    cursor: not-allowed;
+    border: 1px solid #ced4da;
+    padding: 10px; /* Match other inputs if not already inherited */
+    width: 100%; /* Match other inputs */
+    box-sizing: border-box; /* Match other inputs */
+    border-radius: 4px; /* Match other inputs */
+    margin-bottom: 15px; /* Match other inputs */
+}
