@@ -65,6 +65,13 @@ if (isset($pdo)) {
 
 $user = $_SESSION['user']; // For navigation menu
 
+// Load settings
+$settings = [];
+$stmt = $pdo->query('SELECT * FROM settings');
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $settings[$row['setting_key']] = $row['value'];
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -312,22 +319,42 @@ $user = $_SESSION['user']; // For navigation menu
                         </div>
                     <?php endforeach; ?>
                     <div class="checkout-total">
-                        <h3>Total: $<?php echo htmlspecialchars(number_format($cart_total, 2)); ?></h3>
+                        <table style="float:right; text-align:right;">
+                            <tr><td>Cart Total:</td><td>$<?php echo htmlspecialchars(number_format($cart_total, 2)); ?></td></tr>
+                            <tr><td>Delivery Fee:</td><td>$<?php echo htmlspecialchars(number_format((float)($settings['delivery_fee'] ?? 0), 2)); ?></td></tr>
+                            <tr><td><strong>Total:</strong></td><td><strong>$<?php echo htmlspecialchars(number_format($cart_total + (float)($settings['delivery_fee'] ?? 0), 2)); ?></strong></td></tr>
+                        </table>
+                        <div style="clear:both;"></div>
+                        <?php $min_order = (float)($settings['min_order_amount'] ?? 0); ?>
+                        <?php if ($cart_total < $min_order): ?>
+                            <div class="feed-alert feed-alert-error">Minimum order amount is $<?php echo number_format($min_order, 2); ?>. Please add more items to your cart.</div>
+                            <button class="btn-place-order" disabled>Place Order</button>
+                        <?php else: ?>
+                            <button type="submit" class="btn-place-order">Place Order</button>
+                        <?php endif; ?>
                     </div>
                 </div>
                 
                 <div class="checkout-section">
                     <h2>Payment Method</h2>
-                    <div class="payment-method-option <?php echo ($selected_payment_method == 'cod') ? 'selected' : ''; ?>" onclick="selectPaymentMethod('cod')">
-                        <input type="radio" id="payment_cod" name="payment_method" value="cod" <?php echo ($selected_payment_method == 'cod') ? 'checked' : ''; ?> required>
-                        <label for="payment_cod">Cash on Delivery (COD)</label>
+                    <?php if (($settings['payment_gateway'] ?? '') == 'cod' || ($settings['payment_gateway'] ?? '') == 'both'): ?>
+                    <div class="payment-method-option <?php echo $selected_payment_method === 'cod' ? 'selected' : ''; ?>">
+                        <label>
+                            <input type="radio" name="payment_method" value="cod" <?php echo $selected_payment_method === 'cod' ? 'checked' : ''; ?>>
+                            Cash on Delivery
+                        </label>
                         <div class="payment-method-description">Pay with cash upon delivery of your order.</div>
                     </div>
-                    <div class="payment-method-option <?php echo ($selected_payment_method == 'gcash') ? 'selected' : ''; ?>" onclick="selectPaymentMethod('gcash')">
-                        <input type="radio" id="payment_gcash" name="payment_method" value="gcash" <?php echo ($selected_payment_method == 'gcash') ? 'checked' : ''; ?> required>
-                        <label for="payment_gcash">GCash</label>
-                        <div class="payment-method-description">Pay using GCash. (API integration coming soon - this option is for display purposes).</div>
+                    <?php endif; ?>
+                    <?php if (($settings['payment_gateway'] ?? '') == 'gcash' || ($settings['payment_gateway'] ?? '') == 'both'): ?>
+                    <div class="payment-method-option <?php echo $selected_payment_method === 'gcash' ? 'selected' : ''; ?>">
+                        <label>
+                            <input type="radio" name="payment_method" value="gcash" <?php echo $selected_payment_method === 'gcash' ? 'checked' : ''; ?>>
+                            GCash
+                        </label>
+                        <div class="payment-method-description">Send payment to GCash Number: <strong><?php echo htmlspecialchars($settings['gcash_number'] ?? ''); ?></strong></div>
                     </div>
+                    <?php endif; ?>
                      <div id="gcash_instructions" style="display: <?php echo ($selected_payment_method == 'gcash') ? 'block' : 'none'; ?>; margin-top:10px; padding:10px; background-color:#e9ecef; border-radius:4px;">
                         <p><strong>GCash Payment Instructions:</strong> Further instructions for GCash payment will appear here or you will be redirected after placing the order.</p>
                     </div>
@@ -335,7 +362,6 @@ $user = $_SESSION['user']; // For navigation menu
 
                 <div class="checkout-actions">
                     <a href="cart_page.php" class="btn-secondary" style="padding: 10px 15px; text-decoration:none; background-color:#6c757d; color:white; border-radius:5px;">&laquo; Back to Cart</a>
-                    <button type="submit" class="btn-place-order">Place Order</button>
                 </div>
             </form>
         

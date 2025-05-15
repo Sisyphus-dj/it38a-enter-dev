@@ -2,189 +2,166 @@
 session_start();
 include_once 'db_connection.php';
 
-// User must be logged in
-if (!isset($_SESSION['user'])) {
-    $_SESSION['shop_message'] = "You must be logged in to edit products.";
-    $_SESSION['shop_message_type'] = "error";
-    header('Location: login.php');
+// Ensure only admins can access this page
+if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
+    header('Location: login.php'); 
     exit;
 }
 
-// Validate Product ID
-if (!isset($_GET['id']) || !filter_var($_GET['id'], FILTER_VALIDATE_INT)) {
-    $_SESSION['shop_message'] = "Invalid product ID specified for editing.";
-    $_SESSION['shop_message_type'] = "error";
-    header('Location: shop_page.php');
+// Get product ID from URL
+$product_id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+if (!$product_id) {
+    header('Location: admin_products.php');
     exit;
 }
 
-$product_id = (int)$_GET['id'];
-$current_user_id = $_SESSION['user']['id'];
-$product_data = null;
-$categories = [];
+// Fetch product details
+$stmt = $pdo->prepare('SELECT * FROM products WHERE id = ?');
+$stmt->execute([$product_id]);
+$edit_product = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if (isset($pdo)) {
-    try {
-        // Fetch product data
-        $stmt_product = $pdo->prepare("SELECT * FROM products WHERE id = :id");
-        $stmt_product->bindParam(':id', $product_id, PDO::PARAM_INT);
-        $stmt_product->execute();
-        $product_data = $stmt_product->fetch(PDO::FETCH_ASSOC);
+if (!$edit_product) {
+    header('Location: admin_products.php');
+    exit;
+}
 
-        if (!$product_data) {
-            $_SESSION['shop_message'] = "Product not found.";
-            $_SESSION['shop_message_type'] = "error";
-            header('Location: shop_page.php');
-            exit;
-        }
+// Fetch categories for dropdown
+$stmt = $pdo->query('SELECT * FROM categories');
+$categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Authorization check: Ensure current user owns the product
-        if ($product_data['user_id'] != $current_user_id) {
-            $_SESSION['shop_message'] = "You are not authorized to edit this product.";
-            $_SESSION['shop_message_type'] = "error";
-            header('Location: shop_page.php');
-            exit;
-        }
+// Process form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
+    $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_STRING);
+    $price = filter_input(INPUT_POST, 'price', FILTER_VALIDATE_FLOAT);
+    $category_id = filter_input(INPUT_POST, 'category_id', FILTER_VALIDATE_INT);
+    $stock_quantity = filter_input(INPUT_POST, 'stock_quantity', FILTER_VALIDATE_INT);
 
-        // Fetch categories for the dropdown
-        $stmt_categories = $pdo->query("SELECT id, name FROM categories ORDER BY name ASC");
-        $categories = $stmt_categories->fetchAll(PDO::FETCH_ASSOC);
-
-    } catch (PDOException $e) {
-        error_log("Database error in edit_product.php: " . $e->getMessage());
-        $_SESSION['shop_message'] = "An error occurred while fetching product data.";
-        $_SESSION['shop_message_type'] = "error";
-        header('Location: shop_page.php');
+    if (!$name || !$description || !$price || !$category_id || !$stock_quantity) {
+        $error = 'All fields are required.';
+    } else {
+        // Update product
+        $stmt = $pdo->prepare('UPDATE products SET name = ?, description = ?, price = ?, category_id = ?, stock_quantity = ? WHERE id = ?');
+        $stmt->execute([$name, $description, $price, $category_id, $stock_quantity, $product_id]);
+        header('Location: admin_products.php');
         exit;
     }
-} else {
-    $_SESSION['shop_message'] = "Database connection not available.";
-    $_SESSION['shop_message_type'] = "error";
-    header('Location: shop_page.php');
-    exit;
 }
-
-$user = $_SESSION['user']; // For navbar consistency
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Product - AgriSync Marketplace</title>
-    <link rel="stylesheet" href="user_dashboard.css"> <!-- Reusing dashboard CSS -->
+    <title>Edit Product - AgriSync Admin</title>
+    <link rel="stylesheet" href="styles.css"> 
     <style>
-        .edit-product-container {
+        .admin-container {
             max-width: 800px;
-            margin: 20px auto;
+            margin: 0 auto;
             padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        .current-image-preview {
-            max-width: 200px;
-            max-height: 200px;
-            margin-bottom: 10px;
-            border-radius: 4px;
+        .admin-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .admin-nav {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .admin-nav a {
+            padding: 10px 20px;
+            background-color: #4e944f;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .admin-nav a:hover {
+            background-color: #357a38;
+        }
+        .edit-form {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .edit-form label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .edit-form input, .edit-form select, .edit-form textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
             border: 1px solid #ddd;
-            display: block; /* Make image block to sit above checkbox */
+            border-radius: 4px;
         }
-        /* Using .create-post-form styles from user_dashboard.css for the form itself */
+        .edit-form textarea {
+            height: 100px;
+        }
+        .edit-form button {
+            background-color: #4e944f;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .edit-form button:hover {
+            background-color: #357a38;
+        }
+        .error {
+            color: red;
+            margin-bottom: 15px;
+        }
     </style>
 </head>
 <body>
-    <!-- Navigation Menu -->
-    <nav class="navbar" role="navigation" aria-label="Main Navigation">
-        <a href="user_dashboard.php" class="app-name">AgriSync</a>
-        <ul class="nav-menu">
-            <li><a href="user_dashboard.php">Home</a></li>
-            <li><a href="shop_page.php" class="shop-btn">Shop</a></li>
-            <li>
-                <button aria-haspopup="true" aria-expanded="false">Profile</button>
-                <div class="dropdown-content" role="menu" aria-label="Profile submenu">
-                    <a href="logout.php">Logout</a>
-                </div>
-            </li>
-        </ul>
-    </nav>
-    <div class="nav-spacer"></div>
-
-    <div class="edit-product-container">
-        <h2>Edit Product Details</h2>
-
-        <?php
-        // Display any session messages from update_product.php
-        if (isset($_SESSION['product_form_message'])) {
-            $message_type = $_SESSION['product_form_message_type'] ?? 'error';
-            echo "<div class='feed-alert feed-alert-{$message_type}'>" . $_SESSION['product_form_message'] . "</div>";
-            unset($_SESSION['product_form_message']);
-            unset($_SESSION['product_form_message_type']);
-        }
-        ?>
-
-        <form action="update_product.php" method="POST" enctype="multipart/form-data" class="create-post-form">
-            <input type="hidden" name="product_id" value="<?php echo htmlspecialchars($product_data['id']); ?>">
-            <input type="hidden" name="existing_image_path" value="<?php echo htmlspecialchars($product_data['image_path'] ?? ''); ?>">
-
-            <div>
-                <label for="product_name">Product Name:</label>
-                <input type="text" id="product_name" name="product_name" required 
-                       value="<?php echo htmlspecialchars($product_data['name'] ?? ''); ?>">
-            </div>
-
-            <div>
-                <label for="product_description">Description:</label>
-                <textarea id="product_description" name="product_description" rows="6" required><?php echo htmlspecialchars($product_data['description'] ?? ''); ?></textarea>
-            </div>
-
-            <div>
-                <label for="product_price">Price ($):</label>
-                <input type="number" id="product_price" name="product_price" step="0.01" min="0" required
-                       value="<?php echo htmlspecialchars($product_data['price'] ?? ''); ?>">
-            </div>
-
-            <div>
-                <label for="category_id">Category:</label>
-                <select id="category_id" name="category_id">
-                    <option value="">Select a Category (Optional)</option>
-                    <?php foreach ($categories as $category): ?>
-                        <option value="<?php echo htmlspecialchars($category['id']); ?>"
-                            <?php echo ($product_data['category_id'] == $category['id']) ? 'selected' : ''; ?>>
-                            <?php echo htmlspecialchars($category['name']); ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-
-            <div>
-                <label for="stock_quantity">Stock Quantity:</label>
-                <input type="number" id="stock_quantity" name="stock_quantity" min="0" required 
-                       value="<?php echo htmlspecialchars($product_data['stock_quantity'] ?? '0'); ?>">
-            </div>
-
-            <div>
-                <label for="product_image">New Product Image (Optional - Replaces existing):</label>
-                <?php if (!empty($product_data['image_path'])) : ?>
-                    <p style="margin-bottom:5px;">Current Image:</p>
-                    <img src="<?php echo htmlspecialchars($product_data['image_path']); ?>" alt="Current product image" class="current-image-preview">
-                    <div>
-                        <input type="checkbox" name="remove_existing_image" id="remove_existing_image" value="1">
-                        <label for="remove_existing_image" style="font-weight: normal; display: inline;">Remove current image</label>
-                    </div>
-                <?php endif; ?>
-                <input type="file" id="product_image" name="product_image" accept="image/*" style="margin-top:10px;">
-            </div>
-
-            <button type="submit" class="btn">Update Product</button>
-            <a href="shop_page.php#product-<?php echo htmlspecialchars($product_data['id']); ?>" class="btn-cancel" style="margin-left:10px; background-color: #6c757d; color:white; padding: 10px 15px; text-decoration:none; border-radius:4px;">Cancel</a>
-        </form>
-    </div>
-
-    <footer>
-        <div class="footer-content">
-            <p>© <?php echo date("Y"); ?> AgriSync. All Rights Reserved.</p>
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1>Edit Product</h1>
         </div>
-    </footer>
+
+        <div class="admin-nav">
+            <a href="admin_dashboard.php">Dashboard</a>
+            <a href="admin_users.php">Manage Users</a>
+            <a href="admin_products.php">Manage Products</a>
+            <a href="admin_orders.php">Manage Orders</a>
+        </div>
+
+        <?php if (isset($error)): ?>
+            <div class="error"><?php echo $error; ?></div>
+        <?php endif; ?>
+
+        <form class="edit-form" method="post">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" value="<?php echo htmlspecialchars($edit_product['name']); ?>" required>
+
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" required><?php echo htmlspecialchars($edit_product['description']); ?></textarea>
+
+            <label for="price">Price:</label>
+            <input type="number" id="price" name="price" step="0.01" value="<?php echo htmlspecialchars($edit_product['price']); ?>" required>
+
+            <label for="category_id">Category:</label>
+            <select id="category_id" name="category_id" required>
+                <?php foreach ($categories as $category): ?>
+                    <option value="<?php echo $category['id']; ?>" <?php echo $edit_product['category_id'] === $category['id'] ? 'selected' : ''; ?>><?php echo htmlspecialchars($category['name']); ?></option>
+                <?php endforeach; ?>
+            </select>
+
+            <label for="stock_quantity">Stock Quantity:</label>
+            <input type="number" id="stock_quantity" name="stock_quantity" value="<?php echo htmlspecialchars($edit_product['stock_quantity']); ?>" required>
+
+            <button type="submit">Update Product</button>
+        </form>
+
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="admin_products.php">Back to Products</a>
+        </div>
+    </div>
 </body>
 </html> 

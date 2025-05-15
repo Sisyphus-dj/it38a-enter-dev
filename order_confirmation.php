@@ -59,13 +59,20 @@ try {
 }
 
 $user = $_SESSION['user']; // For navigation menu
+
+// Load settings
+$settings = [];
+$stmt = $pdo->query('SELECT * FROM settings');
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $settings[$row['setting_key']] = $row['value'];
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Confirmation - AgriSync</title>
+    <title>Order Confirmation - <?php echo htmlspecialchars($settings['site_name'] ?? 'AgriSync'); ?></title>
     <link rel="stylesheet" href="user_dashboard.css">
     <style>
         .confirmation-container {
@@ -191,8 +198,9 @@ $user = $_SESSION['user']; // For navigation menu
             <div class="feed-alert feed-alert-error"><?php echo htmlspecialchars($page_error); ?></div>
         <?php elseif ($order_details && !empty($ordered_items)): ?>
             <div class="confirmation-header">
-                <h1>Thank You For Your Order!</h1>
+                <h1>Thank You For Your Order from <?php echo htmlspecialchars($settings['site_name'] ?? 'AgriSync'); ?>!</h1>
                 <p>Your order has been placed successfully.</p>
+                <p>If you have questions, contact us at <a href="mailto:<?php echo htmlspecialchars($settings['contact_email'] ?? ''); ?>"><?php echo htmlspecialchars($settings['contact_email'] ?? ''); ?></a></p>
             </div>
 
             <div class="order-details-section">
@@ -202,6 +210,9 @@ $user = $_SESSION['user']; // For navigation menu
                 <p><strong>Order Status:</strong> <?php echo htmlspecialchars(ucfirst($order_details['order_status'])); ?></p>
                 <p><strong>Total Amount:</strong> $<?php echo htmlspecialchars(number_format($order_details['total_amount'], 2)); ?></p>
                 <p><strong>Payment Method:</strong> <?php echo htmlspecialchars($order_details['payment_method'] ?? 'N/A'); ?></p>
+                <?php if (($order_details['payment_method'] ?? '') == 'gcash'): ?>
+                <p><strong>GCash Number:</strong> <?php echo htmlspecialchars($settings['gcash_number'] ?? ''); ?></p>
+                <?php endif; ?>
             </div>
 
             <div class="shipping-details-section">

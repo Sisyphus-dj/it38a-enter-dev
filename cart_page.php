@@ -37,6 +37,13 @@ if (isset($pdo)) {
             $cart_total += $item['product_price'] * $item['quantity'];
         }
 
+        // Load settings
+        $settings = [];
+        $stmt = $pdo->query('SELECT * FROM settings');
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $settings[$row['setting_key']] = $row['value'];
+        }
+
     } catch (PDOException $e) {
         error_log("Error fetching cart items: " . $e->getMessage());
         $page_error = "Could not load your cart. Please try again later.";
@@ -229,8 +236,19 @@ $user = $_SESSION['user']; // For navigation menu
             <?php endforeach; ?>
 
             <div class="cart-summary">
-                <h3>Cart Total: $<?php echo htmlspecialchars(number_format($cart_total, 2)); ?></h3>
-                <a href="checkout_page.php" class="btn-checkout">Proceed to Checkout</a> <!-- Placeholder for now -->
+                <table style="float:right; text-align:right;">
+                    <tr><td>Cart Total:</td><td>$<?php echo htmlspecialchars(number_format($cart_total, 2)); ?></td></tr>
+                    <tr><td>Delivery Fee:</td><td>$<?php echo htmlspecialchars(number_format((float)($settings['delivery_fee'] ?? 0), 2)); ?></td></tr>
+                    <tr><td><strong>Total:</strong></td><td><strong>$<?php echo htmlspecialchars(number_format($cart_total + (float)($settings['delivery_fee'] ?? 0), 2)); ?></strong></td></tr>
+                </table>
+                <div style="clear:both;"></div>
+                <?php $min_order = (float)($settings['min_order_amount'] ?? 0); ?>
+                <?php if ($cart_total < $min_order): ?>
+                    <div class="feed-alert feed-alert-error">Minimum order amount is $<?php echo number_format($min_order, 2); ?>. Please add more items to your cart.</div>
+                    <button class="btn-checkout" disabled>Proceed to Checkout</button>
+                <?php else: ?>
+                    <a href="checkout_page.php" class="btn-checkout">Proceed to Checkout</a>
+                <?php endif; ?>
             </div>
         <?php endif; ?>
     </div>
