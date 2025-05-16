@@ -35,21 +35,12 @@ if (isset($_SESSION['feed_message'])) {
             <li><a href="#">Home</a></li>
 
             <li>
-                <button aria-haspopup="true" aria-expanded="false">Support</button>
-                <div class="dropdown-content" role="menu" aria-label="Support submenu">
-                    <a href="#">FAQs</a>
-                    <a href="#">Contact Support</a>
-                </div>
-            </li>
-
-            <li>
                 <button aria-haspopup="true" aria-expanded="false">Profile</button>
                 <div class="dropdown-content" role="menu" aria-label="Profile submenu">
                     <a href="logout.php">Logout</a>
                 </div>
             </li>
 
-            <li><a href="#">About Us</a></li>
             <li><a href="shop_page.php" class="shop-btn">Shop</a></li>
             <li><button class="contact-btn">Contact Us</button></li>
         </ul>

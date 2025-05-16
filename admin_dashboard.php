@@ -281,8 +281,6 @@ $avg_order_value = $stmt->fetch(PDO::FETCH_ASSOC)['avg_order_value'] ?? 0;
             <a href="admin_users.php">Manage Users</a>
             <a href="admin_products.php">Manage Products</a>
             <a href="admin_orders.php">Manage Orders</a>
-            <a href="admin_content.php">Content Management</a>
-            <a href="admin_settings.php">Settings</a>
         </div>
 
         <div class="stats-container">
