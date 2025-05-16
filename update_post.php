@@ -63,6 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $link_url_new = filter_input(INPUT_POST, 'link_url', FILTER_VALIDATE_URL);
     $existing_image_path = filter_input(INPUT_POST, 'existing_image_path', FILTER_SANITIZE_STRING);
     $remove_existing_image = isset($_POST['remove_existing_image']) ? (bool)$_POST['remove_existing_image'] : false;
+    $bisaya_content = trim(filter_input(INPUT_POST, 'bisaya_content', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
 
     $errors = [];
     $new_image_path_for_db = $existing_image_path; // Start with existing, may change
@@ -167,6 +168,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $sql = "UPDATE posts SET 
                         text_content = :text_content,
+                        bisaya_content = :bisaya_content,
                         image_path = :image_path, 
                         link_url = :link_url, 
                         link_title = :link_title, 
@@ -176,16 +178,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             $stmt = $pdo->prepare($sql);
 
-            $stmt->bindParam(':text_content', $text_content, PDO::PARAM_STR);
-            $stmt->bindParam(':image_path', $new_image_path_for_db, PDO::PARAM_STR);
-            $stmt->bindParam(':link_url', $link_url_new, PDO::PARAM_STR);
-            $stmt->bindParam(':link_title', $link_title_db, PDO::PARAM_STR);
-            $stmt->bindParam(':link_description', $link_description_db, PDO::PARAM_STR);
-            $stmt->bindParam(':link_image_url', $link_image_url_db, PDO::PARAM_STR);
-            $stmt->bindParam(':post_id', $post_id, PDO::PARAM_INT);
-            $stmt->bindParam(':user_id', $current_user_id, PDO::PARAM_INT); // Ensure only owner updates
+            $stmt->execute([
+                ':text_content' => $text_content,
+                ':bisaya_content' => $bisaya_content,
+                ':image_path' => $new_image_path_for_db,
+                ':link_url' => $link_url_new,
+                ':link_title' => $link_title_db,
+                ':link_description' => $link_description_db,
+                ':link_image_url' => $link_image_url_db,
+                ':post_id' => $post_id,
+                ':user_id' => $current_user_id
+            ]);
             
-            if ($stmt->execute()) {
+            if ($stmt->rowCount() > 0) {
                 $_SESSION['feed_message'] = "Post updated successfully!";
                 $_SESSION['feed_message_type'] = "success";
                 header('Location: user_dashboard.php#post-' . $post_id);

@@ -17,6 +17,16 @@ if (isset($_SESSION['feed_message'])) {
         unset($_SESSION['form_data']);
     }
 }
+
+// Fetch Knowledge Hub articles
+$articles = [];
+try {
+    $stmt = $pdo->prepare("SELECT kh.*, u.first_name, u.last_name FROM knowledge_hub kh LEFT JOIN users u ON kh.author_id = u.id WHERE kh.status = 'published' ORDER BY published_at DESC");
+    $stmt->execute();
+    $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+    // Optionally log error
+}
 ?>
 
 <!DOCTYPE html>
@@ -113,6 +123,27 @@ if (isset($_SESSION['feed_message'])) {
                 </form>
             </div>
 
+            <!-- Knowledge Hub Articles -->
+            <div class="knowledge-hub-feed">
+                <?php if (!empty($articles)): ?>
+                    <?php foreach ($articles as $article): ?>
+                        <article class="knowledge-article-feed">
+                            <div class="kh-label">Knowledge Hub Article</div>
+                            <h3><?php echo htmlspecialchars($article['title']); ?></h3>
+                            <div class="kh-meta">Category: <?php echo htmlspecialchars($article['category']); ?> | By: <?php echo htmlspecialchars(($article['first_name'] ?? '') . ' ' . ($article['last_name'] ?? '')); ?> | Published: <?php echo htmlspecialchars(date('F j, Y', strtotime($article['published_at']))); ?></div>
+                            <div class="kh-content-block">
+                                <strong>English:</strong>
+                                <div><?php echo nl2br(htmlspecialchars($article['content'])); ?></div>
+                                <strong>Bisaya:</strong>
+                                <div style="color:#4e944f;">
+                                    <?php echo !empty($article['bisaya_content']) ? nl2br(htmlspecialchars($article['bisaya_content'])) : '<em>Wala pa’y Bisaya nga hubad.</em>'; ?>
+                                </div>
+                            </div>
+                        </article>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
+
             <!-- Display Feed Posts -->
             <div class="feed-posts">
                 <h3>Latest Posts</h3>
@@ -139,8 +170,12 @@ if (isset($_SESSION['feed_message'])) {
                                 echo "</div>"; // end post-header
                                 
                                 // Display text content if available
-                                if (!empty($post['text_content'])) {
-                                    echo "<div class='post-caption'>" . nl2br(htmlspecialchars($post['text_content'])) . "</div>";
+                                if (!empty($post['text_content']) || !empty($post['bisaya_content'])) {
+                                    echo "<div class='post-caption'>";
+                                    echo "<strong>English:</strong><div>" . nl2br(htmlspecialchars($post['text_content'])) . "</div>";
+                                    echo "<strong>Bisaya:</strong><div style='color:#4e944f;'>" .
+                                        (!empty($post['bisaya_content']) ? nl2br(htmlspecialchars($post['bisaya_content'])) : '<em>Wala pa’y Bisaya nga hubad.</em>') . "</div>";
+                                    echo "</div>";
                                 }
 
                                 // Display based on post type

@@ -537,3 +537,37 @@ footer {
         padding: 0 2px;
     }
 }
+
+.knowledge-hub-feed {
+    margin-bottom: 30px;
+}
+.knowledge-article-feed {
+    border: 2px solid #4e944f;
+    background: #f6fff6;
+    border-radius: 8px;
+    padding: 18px 20px 15px 20px;
+    margin-bottom: 18px;
+    box-shadow: 0 2px 8px rgba(78,148,79,0.07);
+    position: relative;
+}
+.kh-label {
+    position: absolute;
+    top: -14px;
+    left: 18px;
+    background: #4e944f;
+    color: #fff;
+    font-size: 0.95em;
+    font-weight: bold;
+    padding: 2px 12px;
+    border-radius: 6px 6px 6px 0;
+    letter-spacing: 1px;
+    box-shadow: 0 2px 4px rgba(78,148,79,0.08);
+}
+.kh-meta {
+    color: #4e944f;
+    font-size: 0.95em;
+    margin-bottom: 10px;
+}
+.kh-content-block {
+    margin-top: 10px;
+}

@@ -78,6 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $post_type = filter_input(INPUT_POST, 'post_type', FILTER_SANITIZE_STRING);
     $text_content = trim(filter_input(INPUT_POST, 'text_content', FILTER_SANITIZE_FULL_SPECIAL_CHARS)); // Allow more chars for emojis
     $link_url = filter_input(INPUT_POST, 'link_url', FILTER_VALIDATE_URL);
+    $bisaya_content = trim(filter_input(INPUT_POST, 'bisaya_content', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
 
     $image_path = null;
     $link_title = null;
@@ -184,28 +185,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // --- Database Insertion ---
     if (empty($errors) && isset($pdo)) {
         try {
-            $sql = "INSERT INTO posts (user_id, post_type, text_content, image_path, link_url, link_title, link_description, link_image_url, created_at) 
-                    VALUES (:user_id, :post_type, :text_content, :image_path, :link_url, :link_title, :link_description, :link_image_url, NOW())";
+            $sql = "INSERT INTO posts (user_id, post_type, text_content, bisaya_content, image_path, link_url, link_title, link_description, link_image_url, created_at) 
+                    VALUES (:user_id, :post_type, :text_content, :bisaya_content, :image_path, :link_url, :link_title, :link_description, :link_image_url, NOW())";
             $stmt = $pdo->prepare($sql);
+            $stmt->execute([
+                ':user_id' => $user_id,
+                ':post_type' => $post_type,
+                ':text_content' => $text_content,
+                ':bisaya_content' => $bisaya_content,
+                ':image_path' => $image_path,
+                ':link_url' => $link_url,
+                ':link_title' => $link_title,
+                ':link_description' => $link_description,
+                ':link_image_url' => $link_image_url
+            ]);
 
-            $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-            $stmt->bindParam(':post_type', $post_type, PDO::PARAM_STR);
-            $stmt->bindParam(':text_content', $text_content, PDO::PARAM_STR);
-            $stmt->bindParam(':image_path', $image_path, PDO::PARAM_STR);
-            $stmt->bindParam(':link_url', $link_url, PDO::PARAM_STR);
-            $stmt->bindParam(':link_title', $link_title, PDO::PARAM_STR);
-            $stmt->bindParam(':link_description', $link_description, PDO::PARAM_STR);
-            $stmt->bindParam(':link_image_url', $link_image_url, PDO::PARAM_STR);
-            
-            if ($stmt->execute()) {
-                // Success
-                $_SESSION['feed_message'] = "Post created successfully!";
-                $_SESSION['feed_message_type'] = "success";
-                header('Location: user_dashboard.php#feed-section'); // Redirect back to the feed
-                exit;
-            } else {
-                $errors[] = "Failed to save post to the database.";
-            }
+            // Success
+            $_SESSION['feed_message'] = "Post created successfully!";
+            $_SESSION['feed_message_type'] = "success";
+            header('Location: user_dashboard.php#feed-section'); // Redirect back to the feed
+            exit;
         } catch (PDOException $e) {
             $errors[] = "Database error: " . $e->getMessage(); // Be cautious about showing raw DB errors to users
             // error_log("Database error in create_post.php: " . $e->getMessage());

@@ -132,6 +132,11 @@ $user = $_SESSION['user']; // For navbar consistency if needed
                 <textarea name="text_content" id="text_content" rows="5" placeholder="Update your thoughts..."><?php echo htmlspecialchars($post_data['text_content'] ?? ''); ?></textarea>
             </div>
 
+            <div>
+                <label for="bisaya_content">Bisaya Translation:</label>
+                <textarea name="bisaya_content" id="bisaya_content" rows="5" placeholder="Ibutang ang Bisaya nga hubad dinhi..."><?php echo htmlspecialchars($post_data['bisaya_content'] ?? ''); ?></textarea>
+            </div>
+
             <!-- Fields specific to post type -->
             <div class="form-group-photo" <?php if ($post_data['post_type'] !== 'photo') echo 'style="display: none;"'; ?>>
                 <label for="image_upload">Upload New Photo (Optional - Replaces existing):</label>
