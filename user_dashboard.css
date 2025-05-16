@@ -106,8 +106,8 @@ footer {
     height: 60px;
     display: flex;
     align-items: center;
-    justify-content: space-between; /* Align app name and menu on opposite sides */
-    padding: 0 20px;
+    justify-content: flex-start; /* Align content to the left */
+    padding: 0 8px; /* Reduce left/right padding */
     z-index: 1000;
     box-sizing: border-box;
 }
@@ -118,17 +118,18 @@ footer {
     font-weight: bold;
     color: #333;
     text-decoration: none;
+    margin-right: 18px; /* Add a bit of space after logo */
 }
 
 /* Navigation Menu */
 .nav-menu {
-    display: flex; /* Align items horizontally */
-    gap: 15px; /* Reduce spacing between menu items */
-    list-style: none; /* Remove bullet points */
+    display: flex;
+    gap: 10px; /* Reduce spacing between menu items */
+    list-style: none;
     margin: 0;
     padding: 0;
-    align-items: center; /* Align items vertically in the center */
-    font-size: 14px; /* Make the menu slightly smaller */
+    align-items: center;
+    font-size: 14px;
 }
 
 .nav-menu > li {
@@ -521,4 +522,18 @@ footer {
     box-sizing: border-box; /* Match other inputs */
     border-radius: 4px; /* Match other inputs */
     margin-bottom: 15px; /* Match other inputs */
+}
+
+@media (max-width: 700px) {
+    .nav-menu {
+        font-size: 12px;
+        gap: 5px;
+    }
+    .app-name {
+        font-size: 16px;
+        margin-right: 8px;
+    }
+    .navbar {
+        padding: 0 2px;
+    }
 }

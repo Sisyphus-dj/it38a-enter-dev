@@ -97,6 +97,18 @@ $user = $_SESSION['user']; // For navigation menu
             font-size: 1.2em;
             color: #777;
         }
+        .btn-cancel {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        .btn-cancel:hover {
+            background-color: #c82333;
+        }
     </style>
 </head>
 <body>
@@ -107,12 +119,12 @@ $user = $_SESSION['user']; // For navigation menu
             <li><a href="user_dashboard.php">Home</a></li>
             <li><a href="shop_page.php" class="shop-btn">Shop</a></li>
             <li><a href="cart_page.php">Cart</a></li>
+            <li><a href="order_history.php" style="font-weight: bold; color: #4e944f;">Orders</a></li>
             <?php if ($user): ?>
             <li>
                 <button aria-haspopup="true" aria-expanded="false">Profile</button>
                 <div class="dropdown-content" role="menu" aria-label="Profile submenu">
                     <a href="logout.php">Logout</a>
-                    <a href="order_history.php" style="font-weight:bold;">Order History</a>
                 </div>
             </li>
             <?php else: ?>
@@ -153,9 +165,17 @@ $user = $_SESSION['user']; // For navigation menu
                         <tr>
                             <td>#<?php echo htmlspecialchars($order['id']); ?></td>
                             <td><?php echo htmlspecialchars(date("M j, Y", strtotime($order['order_date']))); ?></td>
-                            <td>$<?php echo htmlspecialchars(number_format($order['total_amount'], 2)); ?></td>
+                            <td>₱<?php echo htmlspecialchars(number_format($order['total_amount'], 2)); ?></td>
                             <td class="<?php echo htmlspecialchars($status_class); ?>"><?php echo htmlspecialchars(ucfirst($order['order_status'])); ?></td>
-                            <td><a href="view_order_details.php?order_id=<?php echo htmlspecialchars($order['id']); ?>">View Details</a></td>
+                            <td>
+                                <a href="view_order.php?order_id=<?php echo htmlspecialchars($order['id']); ?>">View Details</a>
+                                <?php if (in_array(strtolower($order['order_status']), ['pending', 'processing', 'pending gcash payment'])): ?>
+                                    <form action="cancel_order.php" method="POST" style="display: inline-block; margin-left: 10px;">
+                                        <input type="hidden" name="order_id" value="<?php echo htmlspecialchars($order['id']); ?>">
+                                        <button type="submit" class="btn-cancel" onclick="return confirm('Are you sure you want to cancel this order?')">Cancel Order</button>
+                                    </form>
+                                <?php endif; ?>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

@@ -50,6 +50,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ]);
 
             $success = 'Registration successful. You can now login.';
+            echo "<script>
+                alert('Registration successful! You can now login.');
+                window.location.href = 'login.php';
+            </script>";
+            exit;
         }
     }
 }

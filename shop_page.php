@@ -239,19 +239,8 @@ $user = $_SESSION['user'] ?? null;
         <a href="user_dashboard.php" class="app-name">AgriSync</a>
         <ul class="nav-menu">
             <li><a href="user_dashboard.php">Home</a></li>
-            <li><a href="shop_page.php" class="shop-btn">Shop</a></li>
             <li><a href="cart_page.php">Cart</a></li>
-            <?php if ($user): ?>
-            <li>
-                <button aria-haspopup="true" aria-expanded="false">Profile</button>
-                <div class="dropdown-content" role="menu" aria-label="Profile submenu">
-                    <a href="logout.php">Logout</a>
-                </div>
-            </li>
-            <?php else: ?>
-            <li><a href="login.php">Login</a></li>
-            <li><a href="register.php">Register</a></li>
-            <?php endif; ?>
+            <li><a href="order_history.php" style="font-weight: bold; color: #4e944f;">Orders</a></li>
         </ul>
     </nav>
     <div class="nav-spacer"></div>

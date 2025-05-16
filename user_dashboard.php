@@ -30,28 +30,28 @@ if (isset($_SESSION['feed_message'])) {
 <body>
     <!-- Navigation Menu -->
     <nav class="navbar" role="navigation" aria-label="Main Navigation">
-    <a href="#" class="app-name">AgriSync</a>
+        <a href="user_dashboard.php" class="app-name">AgriSync</a>
         <ul class="nav-menu">
-            <li><a href="#">Home</a></li>
-
-            <li>
-                <button aria-haspopup="true" aria-expanded="false">Support</button>
-                <div class="dropdown-content" role="menu" aria-label="Support submenu">
-                    <a href="#">FAQs</a>
-                    <a href="#">Contact Support</a>
-                </div>
-            </li>
-
+            <li><a href="user_dashboard.php">Home</a></li>
+            <li><a href="shop_page.php" class="shop-btn">Shop</a></li>
+            <?php if ($user): ?>
             <li>
                 <button aria-haspopup="true" aria-expanded="false">Profile</button>
                 <div class="dropdown-content" role="menu" aria-label="Profile submenu">
                     <a href="logout.php">Logout</a>
                 </div>
             </li>
-
-            <li><a href="#">About Us</a></li>
-            <li><a href="shop_page.php" class="shop-btn">Shop</a></li>
-            <li><button class="contact-btn">Contact Us</button></li>
+            <li>
+                <button aria-haspopup="true" aria-expanded="false">Support</button>
+                <div class="dropdown-content" role="menu" aria-label="Support submenu">
+                    <a href="#">FAQs</a>
+                    <a href="#">Customer Support</a>
+                </div>
+            </li>
+            <?php else: ?>
+            <li><a href="login.php">Login</a></li>
+            <li><a href="register.php">Register</a></li>
+            <?php endif; ?>
         </ul>
     </nav>
 
@@ -210,7 +210,6 @@ if (isset($_SESSION['feed_message'])) {
                 toggleFields(); // Initial call to set correct fields on page load
             });
         </script>
-
     </main>
 
     <!-- Footer Section -->
