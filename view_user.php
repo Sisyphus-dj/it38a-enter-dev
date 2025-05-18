@@ -142,7 +142,6 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <tr>
                         <th>Product ID</th>
                         <th>Name</th>
-                        <th>Stock</th>
                         <th>Price</th>
                         <th>Status</th>
                         <th>Created</th>
@@ -153,7 +152,6 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <tr>
                         <td><?php echo $product['id']; ?></td>
                         <td><?php echo htmlspecialchars($product['name']); ?></td>
-                        <td><?php echo $product['stock_quantity']; ?></td>
                         <td>$<?php echo number_format($product['price'], 2); ?></td>
                         <td><?php echo $product['stock_quantity'] > 0 ? 'Active' : 'Out of Stock'; ?></td>
                         <td><?php echo date('M d, Y', strtotime($product['created_at'])); ?></td>

@@ -176,6 +176,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <label for="confirm_password">Confirm Password:</label>
       <input type="password" name="confirm_password" id="confirm_password" required>
 
+      <label for="role">Role:</label>
+      <select name="role" id="role" required>
+          <option value="user">Regular User</option>
+          <option value="seller">Seller</option>
+      </select>
+
       <input type="submit" value="Register">
     </form>
     <p class="toggle-link">

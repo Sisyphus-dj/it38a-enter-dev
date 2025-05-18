@@ -216,7 +216,6 @@ $user = $_SESSION['user']; // For navigation menu
                     <div class="cart-item-details">
                         <h4><?php echo htmlspecialchars($item['product_name']); ?></h4>
                         <p class="price">Price: ₱<?php echo htmlspecialchars(number_format($item['product_price'], 2)); ?></p>
-                         <p class="price">Stock: <?php echo htmlspecialchars($item['stock_quantity']); ?></p>
                     </div>
                     <div class="cart-item-actions">
                         <form action="update_cart_item.php" method="POST" style="display:inline-flex; align-items:center;">

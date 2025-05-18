@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $new_total_quantity = $cart_item ? ($cart_item['quantity'] + $quantity) : $quantity;
 
         if ($new_total_quantity > $product['stock_quantity']) {
-            $_SESSION['shop_message'] = 'Not enough stock for "' . htmlspecialchars($product['name']) . '". Available: ' . $product['stock_quantity'] . ', Requested total: ' . $new_total_quantity . '.';
+            $_SESSION['shop_message'] = 'Sorry, this product is currently unavailable in the requested quantity.';
             $_SESSION['shop_message_type'] = 'warning';
             header('Location: shop_page.php#product-' . $product_id);
             exit;

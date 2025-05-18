@@ -2,9 +2,9 @@
 session_start();
 include_once 'db_connection.php';
 
-// User must be logged in to add a product
-if (!isset($_SESSION['user'])) {
-    $_SESSION['shop_message'] = "You must be logged in to add products.";
+// User must be logged in and be a seller to add a product
+if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'seller') {
+    $_SESSION['shop_message'] = "You must be a registered seller to add products.";
     $_SESSION['shop_message_type'] = "error";
     header('Location: login.php?redirect=add_product.php'); // Redirect to login, then back
     exit;

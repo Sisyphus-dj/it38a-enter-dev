@@ -259,7 +259,7 @@ $user = $_SESSION['user'] ?? null;
     <div class="shop-container">
         <div class="shop-header">
             <h1>Welcome to the AgriSync Marketplace</h1>
-            <?php if ($user): ?>
+            <?php if ($user && $user['role'] === 'seller'): ?>
                 <a href="add_product.php" class="btn-add-product">+ Add New Product</a>
             <?php endif; ?>
         </div>
@@ -324,7 +324,6 @@ $user = $_SESSION['user'] ?? null;
                             <p class="category">Category: <?php echo htmlspecialchars($product['category_name']); ?></p>
                         <?php endif; ?>
                         <p class="description"><?php echo nl2br(htmlspecialchars($product['description'] ?? 'No description available.')); ?></p>
-                        <p class="stock">Stock: <?php echo htmlspecialchars($product['stock_quantity']); ?></p>
                         <p class="seller">Seller: <?php echo htmlspecialchars($product['first_name'] . ' ' . $product['last_name']); ?></p>
                         
                         <?php if ($user && $user['id'] == $product['user_id']): ?>

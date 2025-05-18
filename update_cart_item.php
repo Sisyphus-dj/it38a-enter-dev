@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // 2. Check against stock
         if ($new_quantity > $item_info['stock_quantity']) {
-            $_SESSION['cart_message'] = 'Not enough stock for "' . htmlspecialchars($item_info['product_name']) . '". Requested: ' . $new_quantity . ', Available: ' . $item_info['stock_quantity'] . '.';
+            $_SESSION['cart_message'] = 'Sorry, this product is currently unavailable in the requested quantity.';
             $_SESSION['cart_message_type'] = 'warning';
             header('Location: cart_page.php#cart-item-' . $cart_item_id);
             exit;

@@ -1,19 +1,47 @@
 <?php
 session_start();
-if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'user') {
+if (!isset($_SESSION['user']) || !in_array($_SESSION['user']['role'], ['user', 'seller'])) {
     header('Location: login.php');
     exit;
 }
 
 $user = $_SESSION['user'];
-include_once 'db_connection.php'; // Ensure this path is correct and $pdo is initialized in it
+include_once 'db_connection.php';
+
+// Fetch user-specific data
+if (isset($pdo)) {
+    try {
+        // For sellers, get their product and sales stats
+        if ($user['role'] === 'seller') {
+            $stmt = $pdo->prepare("SELECT COUNT(*) as total_products FROM products WHERE user_id = ?");
+            $stmt->execute([$user['id']]);
+            $total_products = $stmt->fetch(PDO::FETCH_ASSOC)['total_products'];
+
+            $stmt = $pdo->prepare("
+                SELECT COALESCE(SUM(oi.quantity * oi.price), 0) as total_sales 
+                FROM order_items oi 
+                JOIN products p ON oi.product_id = p.id 
+                WHERE p.user_id = ?
+            ");
+            $stmt->execute([$user['id']]);
+            $total_sales = $stmt->fetch(PDO::FETCH_ASSOC)['total_sales'];
+        }
+
+        // For all users, get their order count
+        $stmt = $pdo->prepare("SELECT COUNT(*) as total_orders FROM orders WHERE user_id = ?");
+        $stmt->execute([$user['id']]);
+        $total_orders = $stmt->fetch(PDO::FETCH_ASSOC)['total_orders'];
+    } catch (PDOException $e) {
+        error_log("Error fetching user stats: " . $e->getMessage());
+    }
+}
 
 if (isset($_SESSION['feed_message'])) {
-    $message_type = $_SESSION['feed_message_type'] ?? 'info'; // Default to 'info'
+    $message_type = $_SESSION['feed_message_type'] ?? 'info';
     echo "<div class='feed-alert feed-alert-{$message_type}'>" . $_SESSION['feed_message'] . "</div>";
     unset($_SESSION['feed_message']);
     unset($_SESSION['feed_message_type']);
-    if (isset($_SESSION['form_data'])) { // Clear form data if it was stored
+    if (isset($_SESSION['form_data'])) {
         unset($_SESSION['form_data']);
     }
 }
@@ -25,47 +53,62 @@ if (isset($_SESSION['feed_message'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AgriSync - Your Partner in Sustainable Farming</title>
-    <link rel="stylesheet" href="user_dashboard.css"> 
+    <link rel="stylesheet" href="user_dashboard.css">
 </head>
 <body>
     <!-- Navigation Menu -->
     <nav class="navbar" role="navigation" aria-label="Main Navigation">
-    <a href="#" class="app-name">AgriSync</a>
+        <a href="#" class="app-name">AgriSync</a>
         <ul class="nav-menu">
             <li><a href="#">Home</a></li>
-
+            <li><a href="shop_page.php" class="shop-btn">Shop</a></li>
+            <li><a href="cart_page.php">Cart</a></li>
             <li>
                 <button aria-haspopup="true" aria-expanded="false">Profile</button>
                 <div class="dropdown-content" role="menu" aria-label="Profile submenu">
                     <a href="logout.php">Logout</a>
                 </div>
             </li>
-
-            <li><a href="shop_page.php" class="shop-btn">Shop</a></li>
-            <li><button class="contact-btn">Contact Us</button></li>
         </ul>
     </nav>
 
-    <!-- Spacer to prevent content hiding behind fixed navbar -->
     <div class="nav-spacer"></div>
 
-    <!-- Header Section -->
-    <header>
-        <h1>AgriSync - Your Partner in Sustainable Farming</h1>
-        <h2>Cultivating a Greener Future</h2>
-        <div class="fact-box">
-            <p>Did you know? Sustainable farming can increase crop production by up to 50% while conserving water and soil health.</p>
+    <!-- Dashboard Content -->
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <h1>Welcome, <?php echo htmlspecialchars($user['first_name']); ?>!</h1>
+            <?php if ($user['role'] === 'seller'): ?>
+                <div class="seller-dashboard">
+                    <h2>Seller Dashboard</h2>
+                    <div class="seller-stats">
+                        <div class="stat-card">
+                            <h3>Your Products</h3>
+                            <p><?php echo $total_products ?? 0; ?> listed</p>
+                            <a href="shop_page.php" class="btn">Manage Products</a>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Total Sales</h3>
+                            <p>₱<?php echo number_format($total_sales ?? 0, 2); ?></p>
+                            <a href="seller_orders.php" class="btn">View Orders</a>
+                        </div>
+                    </div>
+                </div>
+            <?php else: ?>
+                <div class="user-dashboard">
+                    <h2>User Dashboard</h2>
+                    <div class="user-stats">
+                        <div class="stat-card">
+                            <h3>Your Orders</h3>
+                            <p><?php echo $total_orders ?? 0; ?> orders</p>
+                            <a href="cart_page.php" class="btn">View Cart</a>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+        </div>
 
-    </header>
-     </div>
-         <div style="text-align: center; margin-top: 20px;">
-    <a href="shop_page.php" class="shop-now-btn">Shop Now</a>
-</div>
-
-    <div class="nav-spacer"></div>
-
-    <!-- Main Content -->
-    <main>
+        <!-- Rest of the existing content -->
         <!-- New Feed Section -->
         <section class="feed-section">
             <h2>Community Feed</h2>
@@ -201,8 +244,7 @@ if (isset($_SESSION['feed_message'])) {
                 toggleFields(); // Initial call to set correct fields on page load
             });
         </script>
-
-    </main>
+    </div>
 
     <!-- Footer Section -->
     <footer>
