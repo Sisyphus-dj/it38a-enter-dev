@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Update user
             $stmt = $pdo->prepare('UPDATE users SET first_name = ?, last_name = ?, email = ?, role = ? WHERE id = ?');
             $stmt->execute([$first_name, $last_name, $email, $role, $user_id]);
-            header('Location: admin_users.php');
+            header('Location: manage_users.php');
             exit;
         }
     }
@@ -59,38 +59,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit User - AgriSync Admin</title>
-    <link rel="stylesheet" href="styles.css"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        :root {
+            --primary-color: #4F8CFF;
+            --background-color: #16161a;
+            --card-bg: #232946;
+            --text-color: #eaeaea;
+            --border-color: #2e2e3a;
+            --card-shadow: 0 2px 8px rgba(0,0,0,0.25);
+        }
+        body {
+            background: var(--background-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
         .admin-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
+            max-width: 500px;
+            margin: 40px auto;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            padding: 32px;
         }
         .admin-header {
             text-align: center;
             margin-bottom: 30px;
-        }
-        .admin-nav {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        .admin-nav a {
-            padding: 10px 20px;
-            background-color: #4e944f;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-        .admin-nav a:hover {
-            background-color: #357a38;
-        }
-        .edit-form {
-            background-color: #f5f5f5;
-            padding: 20px;
-            border-radius: 5px;
         }
         .edit-form label {
             display: block;
@@ -100,23 +94,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             width: 100%;
             padding: 8px;
             margin-bottom: 15px;
-            border: 1px solid #ddd;
+            border: 1px solid var(--border-color);
             border-radius: 4px;
+            background: #1a1a2e;
+            color: var(--text-color);
         }
         .edit-form button {
-            background-color: #4e944f;
+            background-color: var(--primary-color);
             color: white;
             border: none;
             padding: 10px 20px;
             border-radius: 4px;
             cursor: pointer;
+            font-weight: 500;
         }
         .edit-form button:hover {
-            background-color: #357a38;
+            background-color: #38bdf8;
         }
         .error {
-            color: red;
+            color: #ef4444;
             margin-bottom: 15px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -125,40 +131,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="admin-header">
             <h1>Edit User</h1>
         </div>
-
-        <div class="admin-nav">
-            <a href="admin_dashboard.php">Dashboard</a>
-            <a href="admin_users.php">Manage Users</a>
-            <a href="admin_products.php">Manage Products</a>
-            <a href="admin_orders.php">Manage Orders</a>
-        </div>
-
         <?php if (isset($error)): ?>
             <div class="error"><?php echo $error; ?></div>
         <?php endif; ?>
-
         <form class="edit-form" method="post">
             <label for="first_name">First Name:</label>
             <input type="text" id="first_name" name="first_name" value="<?php echo htmlspecialchars($edit_user['first_name']); ?>" required>
-
             <label for="last_name">Last Name:</label>
             <input type="text" id="last_name" name="last_name" value="<?php echo htmlspecialchars($edit_user['last_name']); ?>" required>
-
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($edit_user['email']); ?>" required>
-
             <label for="role">Role:</label>
             <select id="role" name="role" required>
                 <option value="user" <?php echo $edit_user['role'] === 'user' ? 'selected' : ''; ?>>User</option>
                 <option value="admin" <?php echo $edit_user['role'] === 'admin' ? 'selected' : ''; ?>>Admin</option>
             </select>
-
             <button type="submit">Update User</button>
         </form>
-
-        <div style="text-align: center; margin-top: 20px;">
-            <a href="admin_users.php">Back to Users</a>
-        </div>
+        <a href="manage_users.php" class="back-link"><i class="fas fa-arrow-left"></i> Back to Users</a>
     </div>
 </body>
 </html> 

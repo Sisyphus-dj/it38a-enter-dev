@@ -1,0 +1,4 @@
+<?php session_start(); if (!isset($_SESSION['user'])) { header('Location: login.php'); exit; } ?>
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>Appearance Settings</title><style>:root{--primary-color:#4F8CFF;--background-color:#16161a;--card-bg:#232946;--text-color:#eaeaea;}body{background:var(--background-color);color:var(--text-color);font-family:'Segoe UI',Arial,sans-serif;}.container{max-width:600px;margin:40px auto;background:var(--card-bg);border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.25);padding:32px;}h2{color:var(--primary-color);margin-bottom:24px;}</style></head><body><div class="container"><h2>Appearance Settings</h2><p>Appearance settings functionality coming soon.</p></div></body></html> 
